@@ -7,11 +7,27 @@ const rl = readline.createInterface({
     terminal: false
 });
 
-let numbers: Array<number> = [];
-rl.on('line', (line) => numbers.push(Number(line)))
+console.time('aoc')
+let valid_pwd = 0;
+rl.on('line', (line) => {
+    let spittedLine = line.split(' ');
+    let count = spittedLine[0].split('-');
+    let char = spittedLine[1].substr(0,1);
+
+    let counter = 0;
+    for (let i = 0; i < spittedLine[2].length; i++) {
+        if (spittedLine[2].charAt(i) == char) {
+            counter++;
+        }
+    }
+
+    if (counter >= Number(count[0]) && counter <= Number(count[1])) {
+        valid_pwd++;
+    }
+
+})
 
 rl.on('close', () => {
-    for(let i = 0; i < numbers.length; i++) {
-        
-    }
+    console.timeEnd('aoc');
+    console.log(valid_pwd);
 });
