@@ -7,24 +7,34 @@ const rl = readline.createInterface({
     terminal: false
 });
 
-let passports: string[] = [];
-let tmp_passport_collection = '';
+let passports: any[] = [];
+passports.push(new Map([]));
+let passport_idx = 0;
 rl.on('line', (line) => {
     if (line == '') {
-        passports.push(tmp_passport_collection);
-        tmp_passport_collection = '';
+        passport_idx++;
+        passports.push(new Map([]));
         return;
     }
-    tmp_passport_collection += line;
+
+    const splitted_line = line.split(' ');
+    splitted_line.forEach(el => {
+        const value_pair = el.split(':')
+        passports[passport_idx].set(value_pair[0], value_pair[1]);
+    })
 })
 
 rl.on('close', () => {
-    passports.push(tmp_passport_collection);
     let valid_passport = 0;
     for(let i = 0; i < passports.length; i++) {
         if (
-            validBirthday(passports[i]) &&
-            validIssueYear(passports[i])
+            validBirthday(passports[i].get('byr')) &&
+            validIssueYear(passports[i].get('iyr')) &&
+            validExpirationYear(passports[i].get('eyr')) &&
+            validHeight(passports[i].get('hgt')) &&
+            validHairColor(passports[i].get('hcl')) &&
+            validPassportId(passports[i].get('pid')) &&
+            validEyeColor(passports[i].get('ecl'))
         ) {
             valid_passport++;
         }
@@ -32,40 +42,42 @@ rl.on('close', () => {
     console.log(valid_passport);
 });
 
-function validBirthday(passport) {
-    if (passport.indexOf('byr:') < 0) {
-        return false;
-    }
-
-    const birthYear = Number(passport.substr(passport.indexOf('byr:')+4, 4));
-    return birthYear >= 1920 && birthYear <= 2002;
+function validBirthday(birthYear) {
+    return birthYear && birthYear >= 1920 && birthYear <= 2002;
 }
 
-function validIssueYear(passport) {
-    if (passport.indexOf('iyr:') < 0) {
-        return false;
-    }
-
-    const birthYear = Number(passport.substr(passport.indexOf('iyr:')+4, 4));
-    return birthYear >= 2010 && birthYear <= 2020;
+function validIssueYear(issueYear) {
+    return issueYear && issueYear >= 2010 && issueYear <= 2020;
 }
 
-function validExpirationYear(passport) {
-    if (passport.indexOf('eyr:') < 0) {
-        return false;
-    }
-
-    const birthYear = Number(passport.substr(passport.indexOf('eyr:')+4, 4));
-    return birthYear >= 2020 && birthYear <= 2030;
+function validExpirationYear(expirationYear) {
+    return expirationYear && expirationYear >= 2020 && expirationYear <= 2030;
 }
 
-function validHeight(passport) {
-    if (passport.indexOf('hgt:') < 0) {
-        return false;
-    }
+function validHeight(heigth) {
+    if (!heigth) return false;
 
-    const birthYear = Number(passport.substr(passport.indexOf('hgt:')+4, 4));
-    return birthYear >= 2020 && birthYear <= 2030;
+    const unit = heigth.slice(-2)
+    if (unit == 'cm') {
+        const h = Number(heigth.substr(0,3));
+        return h >= 150 && h <= 193;
+    } else {
+        const h = Number(heigth.substr(0,2));
+        return h >= 59 && h <= 76; 
+    }
 }
 
+function validHairColor(hairColor) {    
+    const regex = RegExp('^#[0-9a-f]{6}$');
+    return hairColor && regex.test(hairColor);
+}
 
+function validEyeColor(eyeColor) {
+    const regex = RegExp('^(amb|blu|brn|gry|grn|hzl|oth)$');
+    return eyeColor && regex.test(eyeColor);
+}
+
+function validPassportId(passportId) {
+    const regex = RegExp('^[0-9]{9}$');
+    return passportId && regex.test(passportId);
+}
