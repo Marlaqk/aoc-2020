@@ -22,32 +22,16 @@ rl.on('close', () => {
     passports.push(tmp_passport_collection);
     const valid_password_elements = ['byr:', 'iyr:', 'eyr:', 'hgt:', 'hcl:', 'ecl:', 'pid:'];
     let valid_passport = 0;
-    console.log(passports.length)
     for(let i = 0; i < passports.length; i++) {
-        if (
-            validBirthday(passports[i]) &&
-            validIssueYear(passports[i])
-        ) {
+        let elements = 0;
+        for (let j = 0; j < valid_password_elements.length; j++) {
+            if (passports[i].indexOf(valid_password_elements[j]) >= 0) {
+                elements++;
+            }
+        }
+        if (elements == valid_password_elements.length) {
             valid_passport++;
         }
     }
     console.log(valid_passport);
 });
-
-function validBirthday(passport) {
-    if (passport.indexOf('byr:') < 0) {
-        return false;
-    }
-
-    const birthYear = Number(passport.substr(passport.indexOf('byr:')+4, 4));
-    return birthYear >= 1920 && birthYear <= 2002;
-}
-
-function validIssueYear(passport) {
-    if (passport.indexOf('iyr:') < 0) {
-        return false;
-    }
-
-    const birthYear = Number(passport.substr(passport.indexOf('iyr:')+4, 4));
-    return birthYear >= 2010 && birthYear <= 2020;
-}
