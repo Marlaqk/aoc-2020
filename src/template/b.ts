@@ -2,17 +2,22 @@ import readline from 'readline';
 import fs from 'fs';
 
 const rl = readline.createInterface({
-    input: fs.createReadStream('src/day_' + process.env['DAY'] + '/input/b.txt'),
+    input: fs.createReadStream('src/day_' + process.env['DAY'] + '/input/a.txt'),
     output: process.stdout,
     terminal: false
 });
 
-let sum = 0;
-
+let entries: string[] = [];
 rl.on('line', (line) => {
-    sum += Number(line)
+    entries.push(line);
 })
 
 rl.on('close', () => {
-    console.log(sum)
+    console.log(solve(entries));
 });
+
+function solve(entries: string[]) {
+    for(let i = 0; i < entries.length; i++) {
+        
+    }
+}
