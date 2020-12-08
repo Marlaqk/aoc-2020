@@ -23,7 +23,6 @@ let bags = new Map();
 for (let i = 0; i < rules.length; i++) {
     const [container, content] = rules[i].split(' bags contain');
 
-    // console.log(content)
     if (content.trim() == 'no other bags') {
         bags.set(container, new Bag(container, 1, undefined));
     } else {
