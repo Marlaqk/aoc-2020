@@ -1,4 +1,4 @@
-import { getRawInput } from "../utils";
+import { getRawInput, mapMatrix } from "../utils";
 import { cloneDeep } from "lodash";
 
 const isEmpty = (spot) => spot === "L";
@@ -41,14 +41,8 @@ let newBoard = getRawInput()
 let board;
 
 do {
-  board = cloneDeep(newBoard);
-  newBoard = [];
-  for (let y = 0; y < board.length; y++) {
-    newBoard[y] = [];
-    for (let x = 0; x < board[y].length; x++) {
-        newBoard[y][x] = setField(board[y][x], [x,y], board);
-    }
-  }
+    board = newBoard;
+    newBoard = mapMatrix(board, setField);
 } while (countOccupiedSeats(board) !== countOccupiedSeats(newBoard));
 
 console.log(countOccupiedSeats(board));
