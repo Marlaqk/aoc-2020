@@ -1,4 +1,4 @@
-import { getInput, getRawInput } from "../utils";
+import { getRawInput } from "../utils";
 
 let numbers = new Map();
 const input = getRawInput().split(',').map((el, i) => {
