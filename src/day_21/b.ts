@@ -42,4 +42,4 @@ Object.keys(uniqueAllergens)
   });
 
 const answerString = answerArray.join(",");
-console.log(uniqueAllergens);
+console.log(answerString);
